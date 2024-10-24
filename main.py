@@ -36,7 +36,7 @@ MONTH_DICT = {
 #welcome page
 @app.get("/")
 async def hello_world():
-    return "Hello world"
+    return "Hello Amanda. how r you"
 
 #def cantidad_filmaciones_mes( Mes ): Se ingresa un mes en idioma Español. Debe devolver la cantidad de películas que fueron estrenadas en el mes consultado en la totalidad del dataset.
 @app.get("/filmaciones_por_mes/{mes}")
