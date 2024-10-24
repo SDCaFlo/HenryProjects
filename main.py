@@ -5,6 +5,7 @@ app = FastAPI()
 
 #Load data from CSV
 #Tabla movies
+"""
 movies_df = pd.read_csv("transformed/movies_df.csv", parse_dates=["release_date"], usecols=[
     "id","title", "release_date", "vote_average", "vote_count", "budget", "revenue","return"]).drop_duplicates().reset_index(drop=True)
 #tabla actores
@@ -12,6 +13,7 @@ actor_df = pd.read_csv("transformed/credits_cast_df.csv", usecols=["id", "cast.c
 #tabla directores
 director_df = pd.read_csv("transformed/credits_crew_df.csv", usecols=["id", "crew.job", "crew.name"])
 director_df = director_df[director_df["crew.job"]=="Director"].reset_index(drop=True)
+"""
 
 #Diccionario GLOBAL para consultas mensuales:
 MONTH_DICT = {
@@ -30,6 +32,11 @@ MONTH_DICT = {
     "diciembre" : 12
 }
 
+
+#welcome page
+@app.get("/")
+async def hello_world():
+    return "Hello world"
 
 #def cantidad_filmaciones_mes( Mes ): Se ingresa un mes en idioma Español. Debe devolver la cantidad de películas que fueron estrenadas en el mes consultado en la totalidad del dataset.
 @app.get("/filmaciones_por_mes/{mes}")
