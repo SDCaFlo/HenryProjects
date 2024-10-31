@@ -5,15 +5,15 @@ app = FastAPI()
 
 #Load data from CSV
 #Tabla movies
-"""
-movies_df = pd.read_csv("transformed/movies_df.csv", parse_dates=["release_date"], usecols=[
+
+movies_df = pd.read_csv("transformed_consultas/movies_df_small.csv", parse_dates=["release_date"], usecols=[
     "id","title", "release_date", "vote_average", "vote_count", "budget", "revenue","return"]).drop_duplicates().reset_index(drop=True)
 #tabla actores
 actor_df = pd.read_csv("transformed/credits_cast_df.csv", usecols=["id", "cast.character", "cast.name"]).drop_duplicates().dropna(subset=["cast.name"]).reset_index(drop=True)
 #tabla directores
 director_df = pd.read_csv("transformed/credits_crew_df.csv", usecols=["id", "crew.job", "crew.name"])
 director_df = director_df[director_df["crew.job"]=="Director"].reset_index(drop=True)
-"""
+
 
 #Diccionario GLOBAL para consultas mensuales:
 MONTH_DICT = {
