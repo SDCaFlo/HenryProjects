@@ -32,6 +32,17 @@ MONTH_DICT = {
     "diciembre" : 12
 }
 
+DAY_DICT = {
+    "lunes" : 0,
+    "martes" : 1,
+    "miercoles" : 2,
+    "miércoles" : 2,
+    "jueves" : 3,
+    "viernes" : 4,
+    "sábado" : 5,
+    "sabado" : 5,
+    "domingo" : 6,
+}
 
 #welcome page
 @app.get("/")
@@ -41,20 +52,31 @@ async def hello_world():
 #def cantidad_filmaciones_mes( Mes ): Se ingresa un mes en idioma Español. Debe devolver la cantidad de películas que fueron estrenadas en el mes consultado en la totalidad del dataset.
 @app.get("/filmaciones_por_mes/{mes}")
 async def cantidad_filmaciones_mes(mes: str):
-    mes = MONTH_DICT[mes.lower()]
+    mes_str = mes.lower()
+    mes = MONTH_DICT[mes_str]
     mask = movies_df["release_date"].dt.month==mes
     count = movies_df["title"][mask].shape[0]
-    return {"Movie month:": mes,
+    return {"Movie month:": mes_str,
             "N° of movies": count}
 
 #def cantidad_filmaciones_dia( Dia ): Se ingresa un día en idioma Español. Debe devolver la cantidad de películas que fueron estrenadas en día consultado en la totalidad del dataset.
+# @app.get("/cantidad_filmaciones_dia/{dia}")
+# async def cantidad_filmaciones_dia(dia: str):
+#     dia = dia.capitalize()
+#     check_df = movies_df[["title","release_date"]]
+#     mask = check_df["release_date"].dt.day_name(locale="es_ES")==dia
+#     count = check_df[mask].shape[0]
+#     return {"Día": dia,
+#             "Cantidad de peliculas": count}
+
 @app.get("/cantidad_filmaciones_dia/{dia}")
 async def cantidad_filmaciones_dia(dia: str):
-    dia = dia.capitalize()
+    dia_str = dia.lower()
+    dia = DAY_DICT[dia_str]
     check_df = movies_df[["title","release_date"]]
-    mask = check_df["release_date"].dt.day_name(locale="es_ES")==dia
+    mask = check_df["release_date"].dt.weekday==dia
     count = check_df[mask].shape[0]
-    return {"Día": dia,
+    return {"Día": dia_str,
             "Cantidad de peliculas": count}
 
 #def score_titulo( titulo_de_la_filmación ): Se ingresa el título de una filmación esperando como respuesta el título, el año de estreno y el score.
