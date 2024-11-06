@@ -118,6 +118,7 @@ Por ende, tomamos el siguiente camino:
 3. Se ordena el dataset final y se extrae los valores mas relevantes.
 
 Para el punto 1 optamos por computar por separado: 
+
     - Cosine Similirity para los componentes de OVERVIEW_PCA. 
     - Cosine similarity para genres, title+collection_name, production_companies, original_language+available_languages, country_origin.
     - Diferencia entre release - year y posterior escalado.
