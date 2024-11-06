@@ -1,5 +1,8 @@
 from fastapi import FastAPI
 import pandas as pd
+import numpy as np
+import ml_functions
+
 
 app = FastAPI()
 
@@ -13,6 +16,10 @@ actor_df = pd.read_csv("transformed/credits_cast_df.csv", usecols=["id", "cast.c
 #tabla directores
 director_df = pd.read_csv("transformed/credits_crew_df.csv", usecols=["id", "crew.job", "crew.name"])
 director_df = director_df[director_df["crew.job"]=="Director"].reset_index(drop=True)
+
+# dataframes para ML
+title_id_df = pd.read_csv("transformed_consultas/id_title_db.csv", index_col="title")
+ml_matrix_df = pd.read_csv("transformed_consultas/movies_ml_df_v2_1.csv", index_col="id").head(1000)
 
 
 #Diccionario GLOBAL para consultas mensuales:
@@ -47,7 +54,7 @@ DAY_DICT = {
 #welcome page
 @app.get("/")
 async def hello_world():
-    return "Hello Amanda. how r you"
+    return "Hello Henry. how r you?"
 
 #def cantidad_filmaciones_mes( Mes ): Se ingresa un mes en idioma Español. Debe devolver la cantidad de películas que fueron estrenadas en el mes consultado en la totalidad del dataset.
 @app.get("/filmaciones_por_mes/{mes}")
@@ -160,3 +167,24 @@ async def get_director(director_name: str):
         "retorno promedio": avg_return,
         "Lista de peliculas": json_film_record 
     }
+
+# Funcion para hacer recomendaciones
+@app.get("/get_recomendation/{film_name}")
+async def recomendacion(film_name: str):
+    # se verifica que la pelicula se encuentre en la lista.
+    try:
+        movie_id = int(title_id_df.loc[film_name]["id"])
+    except:
+        return{"result": "movie not in database"}
+    
+    # las funciones estan definidas en el archivo ML_functions.py y su logica en el archivo ML_algorithm.ipynb.
+    top_5_list = ml_functions.find_top_5(movie_id, ml_matrix_df)
+    movie_list = []
+    for id in top_5_list:
+        movie_list.append(title_id_df.index[title_id_df["id"] == id][0])
+
+    return {"top_1": movie_list[0],
+            "top_2": movie_list[1],
+            "top_3" : movie_list[2],
+            "top_4" : movie_list[3],
+            "top_5" : movie_list[4]}
